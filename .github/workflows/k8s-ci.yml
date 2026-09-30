@@ -1,0 +1,26 @@
+name: "Kubernetes Manifests & Kustomize CI"
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  validate-k8s:
+    name: "Validate K8s Manifests & Kustomize"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout Code"
+        uses: actions/checkout@v4
+
+      - name: "Setup Kustomize"
+        uses: imranismail/setup-kustomize@v2
+
+      - name: "Build & Validate Base Manifests"
+        run: |
+          kustomize build base/
+
+      - name: "Build & Validate Production Overlay"
+        run: |
+          kustomize build overlays/production/
